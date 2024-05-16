@@ -1,11 +1,17 @@
-import AppBar from '../AppBar/AppBar';
-import { Outlet } from 'react-router-dom';
+import { Toaster } from "react-hot-toast";
+import { Outlet } from "react-router-dom";
+import AppBar from "../AppBar/AppBar";
+import css from "./Layout.module.css";
 
-const Layout = () => (
-  <div>
-    <AppBar />
-    <Outlet />
-  </div>
-);
+const Layout = () => {
+  return (
+    <div className={css.container}>
+      <AppBar />
+      <Outlet />
+      <Toaster position="top-center" reverseOrder={false} />
+    </div>
+  );
+};
 
 export default Layout;
+

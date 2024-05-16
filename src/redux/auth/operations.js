@@ -3,14 +3,17 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
 
+// Utility to add Authorization header with JWT token
 const setAuthHeader = (token) => {
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
+// Utility to remove Authorization header
 const clearAuthHeader = () => {
   axios.defaults.headers.common.Authorization = '';
 };
 
+// Register user
 export const register = createAsyncThunk('auth/register', async (credentials, thunkAPI) => {
   try {
     const { data } = await axios.post('/users/signup', credentials);
@@ -21,6 +24,7 @@ export const register = createAsyncThunk('auth/register', async (credentials, th
   }
 });
 
+// Login user
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
     const { data } = await axios.post('/users/login', credentials);
@@ -31,6 +35,7 @@ export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI
   }
 });
 
+// Logout user
 export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
     await axios.post('/users/logout');
@@ -40,12 +45,14 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   }
 });
 
+// Refresh user
 export const refreshUser = createAsyncThunk('auth/refresh', async (_, thunkAPI) => {
   const state = thunkAPI.getState();
   const persistedToken = state.auth.token;
 
   if (persistedToken === null) {
-    return thunkAPI.rejectWithValue('Unable to fetch user');
+    // Reject with a custom error message
+    return thunkAPI.rejectWithValue('No token found');
   }
 
   setAuthHeader(persistedToken);

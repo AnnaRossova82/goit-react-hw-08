@@ -1,17 +1,18 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
-import { refreshUser } from '../redux/auth/operations';
-import { selectIsRefreshing } from '../redux/auth/selectors';
-import HomePage from '../pages/HomePage';
-import RegistrationPage from '../pages/RegistrationPage';
-import LoginPage from '../pages/LoginPage';
-import ContactsPage from '../pages/ContactsPage';
-import PrivateRoute from './PrivateRoute';
-import RestrictedRoute from './RestrictedRoute';
-import Layout from './Layout/Layout';
+import { lazy, Suspense, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshUser } from "../redux/auth/operations";
+import { selectIsRefreshing } from "../redux/auth/selectors";
+import Layout from "./Layout/Layout";
+import RestrictedRoute from "./RestrictedRoute";
+import PrivateRoute from "./PrivateRoute";
 
-const App = () => {
+const HomePage = lazy(() => import("../pages/HomePage"));
+const RegisterPage = lazy(() => import('../pages/RegistrationPage'));
+const LoginPage = lazy(() => import("../pages/LoginPage"));
+const ContactsPage = lazy(() => import("../pages/ContactsPage"));
+
+export default function App() {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(selectIsRefreshing);
 
@@ -19,59 +20,34 @@ const App = () => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  if (isRefreshing) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route
-          path="/register"
-          element={<RestrictedRoute component={RegistrationPage} />}
-        />
-        <Route
-          path="/login"
-          element={<RestrictedRoute component={LoginPage} />}
-        />
-        <Route
-          path="/contacts"
-          element={<PrivateRoute component={ContactsPage} />}
-        />
-      </Route>
-    </Routes>
-  );
-};
-
-export default App;
-
-
-
-/* import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchContacts } from '../redux/contacts/operations'; // Corrected import
-import ContactForm from './ContactForm/ContactForm';
-import ContactList from './ContactList/ContactList';
-import SearchBox from './SearchBox/SearchBox';
-
-function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-
-    dispatch(fetchContacts());
-  }, [dispatch]); 
-
-  return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm />
-      <SearchBox />
-      <ContactList />
-    </div>
+  return isRefreshing ? (
+    <p>Refreshing user, please wait...</p>
+  ) : (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="register"
+            element={
+              <RestrictedRoute component={<RegisterPage />} redirectTo="/" />
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <RestrictedRoute component={<LoginPage />} redirectTo="/contacts" />
+            }
+          />
+          <Route
+            path="contacts"
+            element={
+              <PrivateRoute component={<ContactsPage />} redirectTo="/login" />
+            }
+          />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
-
-export default App; */
 
