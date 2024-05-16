@@ -1,6 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/auth/operations'
+import css from "./RegistrationForm.module.css";
 
 const RegistrationForm = () => {
   const dispatch = useDispatch();
@@ -16,19 +17,19 @@ const RegistrationForm = () => {
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
-        <Form>
+        <Form className={css.form}>
           <div>
-            <label htmlFor="name">Name</label>
+            <label className={css.label} htmlFor="name">Name</label>
             <Field type="text" name="name" />
             <ErrorMessage name="name" component="div" />
           </div>
           <div>
-            <label htmlFor="email">Email</label>
+            <label className={css.label} htmlFor="email">Email</label>
             <Field type="email" name="email" />
             <ErrorMessage name="email" component="div" />
           </div>
           <div>
-            <label htmlFor="password">Password</label>
+            <label className={css.label} htmlFor="password">Password</label>
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
           </div>
