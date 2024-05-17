@@ -7,6 +7,7 @@ const Layout = () => {
   return (
     <div className={css.container}>
       <AppBar />
+      <hr />
       <Outlet />
       <Toaster position="top-center" reverseOrder={false} />
     </div>
