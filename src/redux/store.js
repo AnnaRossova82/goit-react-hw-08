@@ -8,7 +8,7 @@ import authReducer from './auth/slice';
 const rootPersistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'contacts'], // Persist auth and contacts slices
+  whitelist: ['auth', 'contacts'], 
 };
 
 const authPersistConfig = {
