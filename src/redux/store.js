@@ -5,28 +5,25 @@ import contactsReducer from './contacts/slice';
 import filtersReducer from './filters/slice';
 import authReducer from './auth/slice';
 
-const rootPersistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['auth', 'contacts'], 
-};
-
 const authPersistConfig = {
   key: 'auth',
   storage,
   whitelist: ['token'],
 };
 
+const contactsPersistConfig = {
+  key: 'contacts',
+  storage,
+};
+
 const rootReducer = combineReducers({
-  contacts: contactsReducer,
+  contacts: persistReducer(contactsPersistConfig, contactsReducer),
   filters: filtersReducer,
   auth: persistReducer(authPersistConfig, authReducer),
 });
 
-const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
-
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -37,3 +34,4 @@ const store = configureStore({
 
 export const persistor = persistStore(store);
 export default store;
+
